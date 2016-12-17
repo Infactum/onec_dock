@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ARG WEBHOST
 
 WORKDIR /tmp
-RUN set -e \
+RUN set -xe \
     # Шрифты MS содержатся в отдельном репозитории
     && echo "deb http://archive.ubuntu.com/ubuntu precise multiverse" >> /etc/apt/sources.list \
     # Принимаем EULA Microfost на использование шрифтов
