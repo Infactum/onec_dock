@@ -3,19 +3,19 @@ set -e
 
 if [ -z "$USERNAME" ]
 then
-    echo "Username env var not set"
+    echo "USERNAME not set"
     exit 1
 fi
 
 if [ -z "$PASSWORD" ]
 then
-    echo "Username env var not set"
+    echo "PASSWORD not set"
     exit 1
 fi
 
 if [ -z "$VERSION" ]
 then
-    echo "Username env var not set"
+    echo "VERSION not set"
     exit 1
 fi
 

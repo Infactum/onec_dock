@@ -1,4 +1,4 @@
-FROM daald/ubuntu32:precise
+FROM daald/ubuntu32:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -45,4 +45,15 @@ RUN set -xe \
     && rm -f /etc/apt/sources.list.d/onec.list \
     && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
-ENV LANG ru_RU.utf8      
+# Даже для выполнения консольных команд платформы необходим X сервер
+RUN set -xe \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        xserver-xorg-video-dummy \
+    && rm -rf /var/lib/apt/lists/*
+ENV DISPLAY :100
+
+ENV LANG ru_RU.utf8
+
+ADD xorg.conf /usr/share/X11/xorg.conf.d/10-dummy.conf
+ADD xstart.sh /usr/local/bin/xstart

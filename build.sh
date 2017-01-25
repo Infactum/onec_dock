@@ -1,7 +1,16 @@
 #!/bin/bash
 set -e
 
-./download.sh
+case "$@" in
+    "--no-tag") VERSION="latest";;
+esac
+
+if [ -z "$VERSION" ]
+then
+    echo "VERSION not set"
+    exit 1
+fi
+
 CID=$(docker run -d -v "$(pwd)"/dist:/usr/share/nginx/html:ro nginx:alpine)
 docker build \
     --build-arg WEBHOST="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$CID")" \
