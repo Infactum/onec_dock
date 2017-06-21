@@ -1,5 +1,11 @@
 #!/bin/bash
 
+while getopts ":n" OPT ; do
+    case $OPT in
+        n) NOBUILD=1 ;;
+    esac
+done
+
 echo "Please enter https://releases.1c.ru/ credentials"
 IFS=""
 read -r -p "Login: " USERNAME
@@ -11,4 +17,6 @@ export PASSWORD
 export VERSION
 
 ./download.sh
-./build.sh
+if [ -z "$NOBUILD" ] ; then
+    ./build.sh
+fi
