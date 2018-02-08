@@ -20,8 +20,7 @@ then
 fi
 
 SRC=$(curl -c /tmp/cookies.txt -s -L https://releases.1c.ru)
-ACTION=$(echo "$SRC" | grep -oP '(?<=form id="loginForm" action=")[^"]+(?=")') 
-LT=$(echo "$SRC" | grep -oP '(?<=input type="hidden" name="lt" value=")[^"]+(?=")')
+ACTION=$(echo "$SRC" | grep -oP '(?<=form method="post" id="loginForm" action=")[^"]+(?=")')
 EXECUTION=$(echo "$SRC" | grep -oP '(?<=input type="hidden" name="execution" value=")[^"]+(?=")')
 
 curl -s -L \
@@ -29,14 +28,13 @@ curl -s -L \
     -b /tmp/cookies.txt \
     -c /tmp/cookies.txt \
     --data-urlencode "inviteCode=" \
-    --data-urlencode "lt=$LT" \
     --data-urlencode "execution=$EXECUTION" \
     --data-urlencode "_eventId=submit" \
     --data-urlencode "username=$USERNAME" \
     --data-urlencode "password=$PASSWORD" \
     https://login.1c.ru"$ACTION"
 
-if ! grep -q "onec_security" /tmp/cookies.txt
+if ! grep -q "TGC" /tmp/cookies.txt
 then
     echo "Auth failed"
     exit 1
