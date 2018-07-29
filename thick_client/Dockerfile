@@ -1,4 +1,4 @@
-FROM daald/ubuntu32:trusty
+FROM ubuntu:xenial
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -13,7 +13,7 @@ RUN set -xe \
     && apt-get update \
     && apt-get install -y --no-install-recommends \        
         curl \
-        dpkg-dev \
+        dpkg-dev locales apt-transport-https \
         # Опциональные зависимости толстого клиента (см. ИТС)
         # Разработка и администрирование - 1С:Предприятие <версия> документация - Руководство администратора
         # - Требования к аппаратуре и программному обеспечению - Прочие требования - Для ОС Linux
@@ -26,8 +26,8 @@ RUN set -xe \
         unixodbc \        
         # необходим multiverse
         ttf-mscorefonts-installer \        
-    && curl -O http://$WEBHOST/client32.tar.gz \
-    && curl -O http://$WEBHOST/server32.tar.gz \
+    && curl -O http://$WEBHOST/client.tar.gz \
+    && curl -O http://$WEBHOST/server.tar.gz \
     # Подготовка локального apt репозитария
     && for f in *.tar.gz; do tar xzvf $f; done \    
     && dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz \
@@ -50,6 +50,7 @@ RUN set -xe \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         xserver-xorg-video-dummy \
+        dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 ENV DISPLAY :100
 
