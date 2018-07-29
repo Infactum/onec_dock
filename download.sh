@@ -44,19 +44,19 @@ CLIENTLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$VERSION" \
-    --data-urlencode "path=Platform\\${VERSION//./_}\\client.deb32.tar.gz" \
+    --data-urlencode "path=Platform\\${VERSION//./_}\\client_${VERSION//./_}.deb64.tar.gz" \
     https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив)')
 
 SERVERINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$VERSION" \
-    --data-urlencode "path=Platform\\${VERSION//./_}\\deb.tar.gz" \
+    --data-urlencode "path=Platform\\${VERSION//./_}\\deb64_${VERSION//./_}.tar.gz" \
     https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив)')    
 
 mkdir -p dist
 
-curl --fail -b /tmp/cookies.txt -o dist/client32.tar.gz -L "$CLIENTLINK"
-curl --fail -b /tmp/cookies.txt -o dist/server32.tar.gz -L "$SERVERINK"
+curl --fail -b /tmp/cookies.txt -o dist/client.tar.gz -L "$CLIENTLINK"
+curl --fail -b /tmp/cookies.txt -o dist/server.tar.gz -L "$SERVERINK"
 
 rm /tmp/cookies.txt
