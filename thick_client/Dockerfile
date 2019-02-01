@@ -6,13 +6,9 @@ ARG WEBHOST
 
 WORKDIR /tmp
 RUN set -xe \
-    # Шрифты MS содержатся в отдельном репозитории
-    && echo "deb http://archive.ubuntu.com/ubuntu precise multiverse" >> /etc/apt/sources.list \
-    # Принимаем EULA Microfost на использование шрифтов
-    && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
     && apt-get update \
-    && apt-get install -y --no-install-recommends \        
-        curl \
+    && apt-get install -y --no-install-recommends \
+        curl ca-certificates \
         dpkg-dev locales apt-transport-https \
         # Опциональные зависимости толстого клиента (см. ИТС)
         # Разработка и администрирование - 1С:Предприятие <версия> документация - Руководство администратора
@@ -24,8 +20,6 @@ RUN set -xe \
         libgsf-1-114 \
         libglib2.0-bin \
         unixodbc \        
-        # необходим multiverse
-        ttf-mscorefonts-installer \        
     && curl -O http://$WEBHOST/client.tar.gz \
     && curl -O http://$WEBHOST/server.tar.gz \
     # Подготовка локального apt репозитария
@@ -40,6 +34,21 @@ RUN set -xe \
     && apt-get autoremove -y --purge \
         curl \
         dpkg-dev \
+    # Костыль по установке шритов MS из репо Debian.
+    # Родные из Ubuntu Multiverse сломаны в текущей версии
+    && apt-get install -y --no-install-recommends \
+        wget cabextract xfonts-utils libmspack0 xfonts-encodings \
+    # Шрифты MS из репо Debian работают стабильно в отличие от 
+    && wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb -O ttf-mscorefonts-installer.deb \
+    # Принимаем EULA Microfost на использование шрифтов
+    && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
+    && dpkg -i ttf-mscorefonts-installer.deb \
+    && rm ttf-mscorefonts-installer.deb \
+    && cp -R /usr/share/fonts/truetype/msttcorefonts/ /usr/share/fonts/truetype/msttcorefonts_/ \
+    && apt-get autoremove -y --purge \
+        wget cabextract xfonts-utils libmspack0 xfonts-encodings \
+    && mv /usr/share/fonts/truetype/msttcorefonts_/ /usr/share/fonts/truetype/msttcorefonts/ \
+    #
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/* \
     && rm -f /etc/apt/sources.list.d/onec.list \
