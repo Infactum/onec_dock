@@ -56,7 +56,7 @@ SERVERINK=$(curl -s -G \
 
 mkdir -p dist
 
-curl --fail -b /tmp/cookies.txt -o dist/client.tar.gz -L "$CLIENTLINK"
-curl --fail -b /tmp/cookies.txt -o dist/server.tar.gz -L "$SERVERINK"
+curl --fail -b /tmp/cookies.txt -o dist/client.tar.gz -L $CLIENTLINK
+curl --fail -b /tmp/cookies.txt -o dist/server.tar.gz -L $SERVERINK
 
 rm /tmp/cookies.txt
