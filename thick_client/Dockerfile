@@ -8,8 +8,8 @@ WORKDIR /tmp
 RUN set -xe \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        curl ca-certificates \
-        dpkg-dev locales apt-transport-https \
+        ca-certificates \
+        locales apt-transport-https \
         # Опциональные зависимости толстого клиента (см. ИТС)
         # Разработка и администрирование - 1С:Предприятие <версия> документация - Руководство администратора
         # - Требования к аппаратуре и программному обеспечению - Прочие требования - Для ОС Linux
@@ -20,20 +20,6 @@ RUN set -xe \
         libgsf-1-114 \
         libglib2.0-bin \
         unixodbc \        
-    && curl -O http://$WEBHOST/client.tar.gz \
-    && curl -O http://$WEBHOST/server.tar.gz \
-    # Подготовка локального apt репозитария
-    && for f in *.tar.gz; do tar xzvf $f; done \    
-    && dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz \
-    && mkdir -p /etc/apt/sources.list.d \
-    && echo deb file:/tmp ./ > /etc/apt/sources.list.d/onec.list \
-    && apt-get update \
-    && apt-get -y --force-yes install \
-        1c-enterprise83-client \
-    # Очистка от мусора
-    && apt-get autoremove -y --purge \
-        curl \
-        dpkg-dev \
     # Костыль по установке шритов MS из репо Debian.
     # Родные из Ubuntu Multiverse сломаны в текущей версии
     && apt-get install -y --no-install-recommends \
@@ -51,7 +37,6 @@ RUN set -xe \
     #
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/* \
-    && rm -f /etc/apt/sources.list.d/onec.list \
     && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
 # Даже для выполнения консольных команд платформы необходим X сервер
@@ -61,6 +46,29 @@ RUN set -xe \
         xserver-xorg-video-dummy \
         dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
+
+RUN set -xe \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl dpkg-dev \
+    && curl -O http://$WEBHOST/client.tar.gz \
+    && curl -O http://$WEBHOST/server.tar.gz \
+    # Подготовка локального apt репозитария
+    && for f in *.tar.gz; do tar xzvf $f; done \    
+    && dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz \
+    && mkdir -p /etc/apt/sources.list.d \
+    && echo deb file:/tmp ./ > /etc/apt/sources.list.d/onec.list \
+    && apt-get update \
+    && apt-get -y --force-yes install \
+        1c-enterprise83-client \
+    # Очистка от мусора
+    && apt-get autoremove -y --purge \
+        curl dpkg-dev \
+    #
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /tmp/* \
+    && rm -f /etc/apt/sources.list.d/onec.list
+
 ENV DISPLAY :100
 
 ENV LANG ru_RU.utf8
