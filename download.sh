@@ -45,14 +45,14 @@ CLIENTLINK=$(curl -s -G \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$VERSION" \
     --data-urlencode "path=Platform\\${VERSION//./_}\\client_${VERSION//./_}.deb64.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив)')
+    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 SERVERINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$VERSION" \
     --data-urlencode "path=Platform\\${VERSION//./_}\\deb64_${VERSION//./_}.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив)')    
+    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 mkdir -p dist
 

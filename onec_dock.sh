@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 while getopts ":n" OPT ; do
     case $OPT in
         n) NOBUILD=1 ;;

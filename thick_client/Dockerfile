@@ -36,7 +36,7 @@ RUN set -xe \
     && mv /usr/share/fonts/truetype/msttcorefonts_/ /usr/share/fonts/truetype/msttcorefonts/ \
     #
     && rm -rf /var/lib/apt/lists/* \
-    && rm -f /tmp/* \
+    && rm -rf /tmp/* \
     && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
 # Даже для выполнения консольных команд платформы необходим X сервер
@@ -66,7 +66,7 @@ RUN set -xe \
         curl dpkg-dev \
     #
     && rm -rf /var/lib/apt/lists/* \
-    && rm -f /tmp/* \
+    && rm -rf /tmp/* \
     && rm -f /etc/apt/sources.list.d/onec.list
 
 ENV DISPLAY :100
